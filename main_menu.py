@@ -1,14 +1,14 @@
 import loan_interest_calculator
 import investment_profile
 """
-Program Name: TimeValue Investment Simulator
+Program Name: Dont Go Broke Investment Simulator
 Course: ITM320
 Description: Main menu for financial calculation application
 Author(s): Team A+
 """
 
 def display_menu(): # The Main Menu to select different parts of the app
-    print("\n=== TimeValue Investment Simulator ===")
+    print("\n=== Don't Go Broke Investment Simulator ===")
     print("1. Select Investment Profile")
     print("2. Future Value of Investments Calculator (empty)")
     print("3. Opportunity Cost Calculator")
