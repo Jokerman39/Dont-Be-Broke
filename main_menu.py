@@ -1,5 +1,7 @@
 import loan_interest_calculator
 import investment_profile
+import future_value_calculator
+import opportunity_cost_calculator
 """
 Program Name: Dont Go Broke Investment Simulator
 Course: ITM320
@@ -9,12 +11,12 @@ Author(s): Team A+
 
 def display_menu(): # The Main Menu to select different parts of the app
     print("\n=== Don't Go Broke Investment Simulator ===")
-    print("1. Select Investment Profile")
+    print("1. Select Investment Profile (2-22-26 Prototype)")
     print("2. Future Value of Investments Calculator (empty)")
-    print("3. Opportunity Cost Calculator")
-    print("4. Target Date Savings Calculator")
-    print("5. Loan Interest Calculator (Done 2-21-26 Nick Hendrix)")
-    print("6. Inflation Loss Calculator")
+    print("3. Opportunity Cost Calculator (2-22-26 prototype)")
+    print("4. Target Date Savings Calculator (empty)")
+    print("5. Loan Interest Calculator (2-21-26 prototype)")
+    print("6. Inflation Loss Calculator (empty)")
     print("7. Exit")
 
 def delay_menu(): # This is just here to stop the system from going to the main menu immediately
@@ -33,13 +35,13 @@ def main_menu():
         choice = input("Enter your choice (1-7): ")
 
         if choice == "1":
-            investment_profile.calculate_growth()
+            investment_profile.run_investment_profile()
             delay_menu()
         elif choice == "2":
-            future_value_calculator()
+            future_value_calculator.future_value_calculator()
             delay_menu()
         elif choice == "3":
-            opportunity_cost_calculator()
+            opportunity_cost_calculator.opportunity_cost_calculator()
             delay_menu()
         elif choice == "4":
             target_date_savings_calculator()
@@ -62,13 +64,6 @@ def main_menu():
 def select_risk_profile():
     print("Risk Tolerance Profile Selected (placeholder)")
 
-
-def future_value_calculator():
-    print("Future Value Calculator (placeholder)")
-
-
-def opportunity_cost_calculator():
-    print("Opportunity Cost Calculator (placeholder)")
 
 
 def target_date_savings_calculator():
