@@ -1,5 +1,5 @@
 # Name: Nick Hendrix
-# Name of Function: Loan Interest Calculator
+# Name of Function: loan_interest_calculator
 # Name of Use Case: Calculate Loan Cost
 class FinancialCalculator:
     """
