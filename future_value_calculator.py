@@ -1,3 +1,7 @@
+# Name: Nick Hendrix
+# Name of Function: future_value_calculator
+# Name of Use Case: Calculate future investments
+
 from financialcalculator_class import FinancialCalculator
 
 class FutureValueCalculator(FinancialCalculator):

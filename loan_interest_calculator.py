@@ -1,32 +1,27 @@
 # Name: Nick Hendrix
-# Name of Function: loan_interest_calculator
-# Name of Use Case: Calculate Loan Cost
+# File: loan_interest_calculator.py
+# Description: Main calculator class using Composition and Inheritance
+
 from financialcalculator_class import FinancialCalculator
+# Import the component class from its separate file
+from loan_simulator import LoanSimulator
 
 class LoanInterestCalculator(FinancialCalculator):
     """
-    Loan calculator that computes:
-    - Monthly payment
-    - Total interest
-    - Impact of extra monthly payments
+    The 'Owner' class.
+    Inherits from FinancialCalculator.
+    COMPOSITION: Uses LoanSimulator to perform calculations.
     """
-
     def __init__(self, principal, rate, years):
         super().__init__(principal, rate, years)
+        
+        # COMPOSITION: Create an instance of the class from the other file
+        self.simulator = LoanSimulator()
 
-    # ----------------------------------------
-    # Standard Monthly Payment Calculation
-    # ----------------------------------------
     def calculate_monthly_payment(self):
-        """
-        Uses amortization formula:
-        M = P * [ r(1+r)^n ] / [ (1+r)^n - 1 ]
-        """
-
+        """Standard amortization formula."""
         monthly_rate = self.rate / 12
         total_payments = self.years * 12
-
-        # If interest rate is 0%, avoid division formula
         if monthly_rate == 0:
             return self.principal / total_payments
 
@@ -35,88 +30,43 @@ class LoanInterestCalculator(FinancialCalculator):
             (monthly_rate * (1 + monthly_rate) ** total_payments) /
             ((1 + monthly_rate) ** total_payments - 1)
         )
-
         return payment
 
-    # ----------------------------------------
-    # Simulate Loan with Optional Extra Payment
-    # ----------------------------------------
-    def simulate_loan(self, extra_payment=0):
-        """
-        Simulates paying the loan month-by-month.
-        Returns:
-        - months needed to pay off loan
-        - total interest paid
-        """
-
-        monthly_rate = self.rate / 12
-        balance = self.principal
+    def run_full_analysis(self, extra_payment=0):
+        """Coordinates the math and display logic."""
         monthly_payment = self.calculate_monthly_payment()
-        total_interest = 0
-        months = 0
 
-        # Continue until loan is fully paid
-        while balance > 0:
-            interest = balance * monthly_rate
-            principal_payment = monthly_payment - interest + extra_payment
+        # DELEGATION: Asking the internal simulator object to do the work
+        std_months, std_interest = self.simulator.run(
+            self.principal, self.rate, self.years, monthly_payment, 0
+        )
+        ext_months, ext_interest = self.simulator.run(
+            self.principal, self.rate, self.years, monthly_payment, extra_payment
+        )
 
-            # Prevent overpaying in final month
-            if principal_payment > balance:
-                principal_payment = balance
-
-            balance -= principal_payment
-            total_interest += interest
-            months += 1
-
-        return months, total_interest 
-
-def loan_interest_calculator():
-    while True: # Starts the loop to check and make sure integers are used.
-        print("\n=== Loan Interest Calculator ===")
-
-        try:
-            # Gather user input
-            principal = float(input("Enter loan amount: "))
-            rate = float(input("Enter annual interest rate (as %): ")) / 100
-            years = int(input("Enter loan term in years: "))
-            extra_payment = float(input("Enter extra monthly payment (0 if none): "))
-
-            # Create Loan Calculator object
-            loan = LoanInterestCalculator(principal, rate, years)
-
-            # Calculate standard loan results
-            standard_monthly = loan.calculate_monthly_payment()
-            standard_months, standard_interest = loan.simulate_loan(0)
-
-            # Calculate loan with extra payments
-            extra_months, extra_interest = loan.simulate_loan(extra_payment)
-
-            # Convert months to years for readability
-            standard_years = standard_months / 12
-            extra_years = extra_months / 12
-
-            # Display Results
-            print("\n--- Standard Loan ---")
-            loan.display_summary()
-            print(f"Monthly Payment: ${standard_monthly:,.2f}")
-            print(f"Time to Pay Off: {standard_months} months ({standard_years:.2f} years)")
-            print(f"Total Interest Paid: ${standard_interest:,.2f}")
-
-            print("\n--- With Extra Payments ---")
-            print(f"Extra Monthly Payment: ${extra_payment:,.2f}")
-            print(f"New Payoff Time: {extra_months} months ({extra_years:.2f} years)")
-            print(f"New Total Interest Paid: ${extra_interest:,.2f}")
-
-            # Show savings
-            months_saved = standard_months - extra_months
-            interest_saved = standard_interest - extra_interest
-
-            print("\n--- Savings ---")
-            print(f"Time Saved: {months_saved} months")
-            print(f"Interest Saved: ${interest_saved:,.2f}", end="\n\n")
-
-        except ValueError: # if string is entered prints an exception and starts the menu over again
-            print("Invalid input. Please enter numeric values only.")
+        print("\n--- Loan Analysis Results ---")
+        self.display_summary()
+        print(f"Monthly Payment: ${monthly_payment:,.2f}")
+        print(f"Total Interest (Standard): ${std_interest:,.2f}")
         
-        else:
-            break # if integers were input earlier breaks the loop 
+        if extra_payment > 0:
+            print(f"Total Interest (With Extra): ${ext_interest:,.2f}")
+            print(f"Interest Saved: ${std_interest - ext_interest:,.2f}")
+
+# ---------------------------------------------------------
+# ENTRY POINT FOR MAIN MENU
+# ---------------------------------------------------------
+def loan_interest_calculator():
+    """Function called by MainMenu.py."""
+    try:
+        p = float(input("Enter loan amount: "))
+        r = float(input("Enter rate (%): ")) / 100
+        y = int(input("Enter years: "))
+        ex = float(input("Extra payment: "))
+
+        app = LoanInterestCalculator(p, r, y)
+        app.run_full_analysis(extra_payment=ex)
+
+    except ValueError:
+        print("Error: Please enter numbers only.")
+ 

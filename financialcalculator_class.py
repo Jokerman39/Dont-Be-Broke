@@ -1,3 +1,7 @@
+# Name: Nick Hendrix
+# Name of Class FinancialCalulator:
+# Common class to assign common attributes of financial investments (principal, interest/earnings rate, time in yrs of loan/investment)
+
 class FinancialCalculator:
     """
 
