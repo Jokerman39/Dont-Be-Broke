@@ -49,7 +49,7 @@ def get_valid_float(prompt):
 
 def get_valid_choice(prompt, valid_options):
     while True:
-        value = input(prompt).strip()
+        value = input(prompt).strip().lower()
         if value in valid_options:
             return value
         else:
@@ -68,11 +68,11 @@ def create_profile():
     current_investment = get_valid_float("Enter current investment amount: ")
     marital_status = get_valid_choice(
         "Enter marital status (Single/Spouse): ",
-        ["Single", "Spouse"]
+        ["single", "spouse"]
     )
     risk_tolerance = get_valid_choice(
         "Enter risk tolerance (Low/Medium/High): ",
-        ["Low", "Medium", "High"]
+        ["low", "medium", "high"]
     )
 
     return InvestmentProfile(
