@@ -204,17 +204,26 @@ def target_date_calculator():
     calc = SavingsCalculator(goal, target_date, current_savings, annual_rate)
     calc.print_summary()
 
-    show_table = input("  Show year-by-year breakdown? (y/n): ").strip().lower()
-    if show_table == "y":
-        calc.print_yearly_breakdown()
+    while True:
+        show_table = input("  Show year-by-year breakdown? (y/n): ").strip().lower()
+        if show_table == "y":
+            calc.print_yearly_breakdown()
+            break
+        elif show_table == "n":
+            break
+        else:
+            print("  ⚠  Not a valid response. Please enter 'y' or 'n'.")
 
     # Optional: re-run with a different rate using the same calc instance
     while True:
         another = input("  Try a different annual return rate? (y/n): ").strip().lower()
-        if another != "y":
+        if another == "y":
+            new_rate = get_float("  📈 New annual return (%): ", min_val=0)
+            calc.update_rate(new_rate)
+            calc.print_summary()
+        elif another == "n":
             break
-        new_rate = get_float("  📈 New annual return (%): ", min_val=0)
-        calc.update_rate(new_rate)
-        calc.print_summary()
+        else:
+            print("  ⚠  Not a valid response. Please enter 'y' or 'n'.")
 
     print("  ✅ Good luck with your savings journey!\n")
