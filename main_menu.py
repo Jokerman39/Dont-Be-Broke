@@ -16,12 +16,12 @@ Author(s): Team A+
 
 def display_menu(): # The Main Menu to select different parts of the app
     print("\n=== Don't Go Broke Investment Simulator ===")
-    print("1. Select Investment Profile (2-22-26 Prototype)")
-    print("2. Future Value of Investments Calculator (empty)")
-    print("3. Opportunity Cost Calculator (2-22-26 prototype)")
-    print("4. Target Date Savings Calculator (empty)")
-    print("5. Loan Interest Calculator (2-21-26 prototype)")
-    print("6. Inflation Loss Calculator (empty)")
+    print("1. Select Investment Profile")
+    print("2. Future Value of Investments Calculator")
+    print("3. Opportunity Cost Calculator")
+    print("4. Target Date Savings Calculator")
+    print("5. Loan Interest Calculator")
+    print("6. Inflation Loss Calculator")
     print("7. Exit")
 
 def delay_menu(): # This is just here to stop the system from going to the main menu immediately
