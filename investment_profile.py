@@ -1,7 +1,11 @@
-# Name: Mateo Meconi
-# Name of Function: calculate_growth
-# Name of Use Case: Create Investment Profile
-
+"""
+Course: ITM320
+Use Case: Create Investment Profile
+Author: Mateo Meconi
+Description: Given a name, age, initial investment amount, current investment amount,
+marital status, and risk tolerance, this tool creates an investment profile for the user
+based on their inputs.
+"""
 
 class InvestmentProfile:
 
@@ -31,10 +35,30 @@ class InvestmentProfile:
 # INPUT VALIDATION HELPERS
 # -----------------------------
 
+def get_valid_name(prompt):
+    while True:
+        value = input(prompt).strip()
+        if not value:
+            print("Name cannot be blank. Please enter a valid client name.")
+            continue
+
+        # Allow letters, spaces, hyphens, and apostrophes in names.
+        if all(part.replace("-", "").replace("'", "").isalpha() for part in value.split()):
+            return value
+
+        print("Invalid name. Please enter only letters, spaces, hyphens, or apostrophes.")
+
+
 def get_valid_int(prompt):
     while True:
         try:
-            return int(input(prompt))
+            value = int(input(prompt))
+            if value < 0:
+                print("Cannot have a negative age, please input an age 0 or above.")
+            elif value > 100:
+                print("Please input a realistic age (100 or below).")
+            else:
+                return value
         except ValueError:
             print("Invalid input. Please enter a whole number.")
 
@@ -42,7 +66,13 @@ def get_valid_int(prompt):
 def get_valid_float(prompt):
     while True:
         try:
-            return float(input(prompt))
+            value = float(input(prompt))
+            if value < 0:
+                print("Cannot have a negative investment, please input a positive value.")
+            elif value > 1000000000:
+                print("Please input a realistic investment amount (1 billion or below).")
+            else:
+                return value
         except ValueError:
             print("Invalid input. Please enter a numeric value.")
 
@@ -62,7 +92,7 @@ def get_valid_choice(prompt, valid_options):
 
 def create_profile():
     
-    name = input("Enter client name: ").strip()
+    name = get_valid_name("Enter client name: ")
     age = get_valid_int("Enter client age: ")
     initial_investment = get_valid_float("Enter initial investment amount: ")
     current_investment = get_valid_float("Enter current investment amount: ")
