@@ -25,16 +25,20 @@ class LoanInterestCalculator(FinancialCalculator):
         if monthly_rate == 0:
             return self.principal / total_payments
 
-        payment = (
-            self.principal *
-            (monthly_rate * (1 + monthly_rate) ** total_payments) /
-            ((1 + monthly_rate) ** total_payments - 1)
-        )
-        return payment
+        try:
+            payment = (
+                self.principal *
+                (monthly_rate * (1 + monthly_rate) ** total_payments) /
+                ((1 + monthly_rate) ** total_payments - 1)
+                )
+            return payment
+        except OverflowError:
+            raise ValueError("Calculated monthly payment is too large.")
 
     def run_full_analysis(self, extra_payment=0):
         """Coordinates the math and display logic."""
         monthly_payment = self.calculate_monthly_payment()
+        extra_payment = self._validate_extra(extra_payment)
 
         # DELEGATION: Asking the internal simulator object to do the work
         std_months, std_interest = self.simulator.run(
@@ -48,10 +52,28 @@ class LoanInterestCalculator(FinancialCalculator):
         self.display_summary()
         print(f"Monthly Payment: ${monthly_payment:,.2f}")
         print(f"Total Interest (Standard): ${std_interest:,.2f}")
+        print(f"Total Months: {std_months}\n")
         
         if extra_payment > 0:
             print(f"Total Interest (With Extra): ${ext_interest:,.2f}")
             print(f"Interest Saved: ${std_interest - ext_interest:,.2f}")
+            print(f"Months with Extra Payment: {ext_months}")
+            print(f"Months saved: {std_months - ext_months}")
+        
+    # --- Validation for extra payment input ---
+    def _validate_extra(self, value):
+        try:
+            value = float(value)
+        except ValueError:
+            raise ValueError("Extra payment must be a number.")
+        
+        if value >= self.principal:  # Extra payment should not exceed the principal
+            raise ValueError("Extra payment must be less than the loan amount.")
+
+        if value < 0:
+            raise ValueError("Extra payment cannot be negative.")
+
+        return value
 
 # ---------------------------------------------------------
 # ENTRY POINT FOR MAIN MENU
@@ -59,14 +81,15 @@ class LoanInterestCalculator(FinancialCalculator):
 def loan_interest_calculator():
     """Function called by MainMenu.py."""
     try:
-        p = float(input("Enter loan amount: "))
-        r = float(input("Enter rate (%): ")) / 100
-        y = int(input("Enter years: "))
-        ex = float(input("Extra payment: "))
+        p = input("Enter loan amount: (< $10,000,000) ")
+        r = input("Enter rate (%): (< 1000) ")
+        y = input("Enter years: (< 100) ")
+        ex = input("Extra payment: (< $10,000,000) ")
 
         app = LoanInterestCalculator(p, r, y)
         app.run_full_analysis(extra_payment=ex)
 
-    except ValueError:
-        print("Error: Please enter numbers only.")
+    except ValueError as e:
+        print(f"Error: {e}")
+        print("Please restart the calculator and enter valid inputs.")
  
