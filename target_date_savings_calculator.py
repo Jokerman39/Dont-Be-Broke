@@ -1,7 +1,8 @@
 """
-Target Date Savings Rate Calculator
-====================================
-Given a future savings goal, a target date, and an expected annual return,
+Course: ITM320
+Use Case: Target Date Savings Rate Calculator
+Author: Mateo Meconi
+Description: Given a future savings goal, a target date, and an expected annual return,
 this tool calculates how much you need to save periodically (monthly/weekly/daily)
 to reach your goal — accounting for compound interest.
 """
@@ -153,16 +154,31 @@ class SavingsCalculator:
 # Input helpers (module-level utilities)
 # ──────────────────────────────────────────────
 
-def get_float(prompt: str, min_val: float = 0.0) -> float:
+def get_float(prompt: str, min_val: float = 0.0, max_val: float | None = None) -> float:
     while True:
         try:
             value = float(input(prompt).replace(",", "").replace("$", ""))
             if value < min_val:
                 print(f"  ⚠  Please enter a value >= {min_val}.")
                 continue
+            if max_val is not None and value > max_val:
+                print(f"  ⚠  Please enter a value <= {max_val}.")
+                continue
             return value
         except ValueError:
             print("  ⚠  Invalid input — please enter a number.")
+
+
+def get_goal(prompt: str) -> float:
+    return get_float(prompt, min_val=1.0, max_val=1000000000)  # Max $1 billion
+
+
+def get_current_savings(prompt: str) -> float:
+    return get_float(prompt, min_val=0.0, max_val=1000000000)  # Max $1 billion
+
+
+def get_annual_rate(prompt: str) -> float:
+    return get_float(prompt, min_val=0.0, max_val=50.0)  # Max 50% return
 
 
 def get_date(prompt: str) -> date:
@@ -195,10 +211,10 @@ def target_date_calculator():
     print("  Calculate exactly how much to save each month,")
     print("  week, or day to hit your financial goal.\n")
 
-    goal            = get_float("  💰 Savings goal ($):              ", min_val=1)
+    goal            = get_goal("  💰 Savings goal ($):              ")
     target_date     = get_date ("  📅 Target date (YYYY-MM-DD):      ")
-    current_savings = get_float("  🏦 Current savings ($):           ", min_val=0)
-    annual_rate     = get_float("  📈 Expected annual return (%):    ", min_val=0)
+    current_savings = get_current_savings("  🏦 Current savings ($):           ")
+    annual_rate     = get_annual_rate("  📈 Expected annual return (%):    ")
 
     # Instantiate the main class — all math happens here
     calc = SavingsCalculator(goal, target_date, current_savings, annual_rate)
@@ -218,7 +234,7 @@ def target_date_calculator():
     while True:
         another = input("  Try a different annual return rate? (y/n): ").strip().lower()
         if another == "y":
-            new_rate = get_float("  📈 New annual return (%): ", min_val=0)
+            new_rate = get_annual_rate("  📈 New annual return (%): ")
             calc.update_rate(new_rate)
             calc.print_summary()
         elif another == "n":
