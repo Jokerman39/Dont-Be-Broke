@@ -7,7 +7,7 @@ import investment_profile
 import future_value_calculator
 import opportunity_cost_calculator
 import target_date_savings_calculator
-import Inflation_erode_Calculator.py
+import Inflation_erode_Calculator
 """
 Program Name: Dont Go Broke Investment Simulator
 Course: ITM320
