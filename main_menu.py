@@ -7,6 +7,7 @@ import investment_profile
 import future_value_calculator
 import opportunity_cost_calculator
 import target_date_savings_calculator
+import Inflation_erode_Calculator.py
 """
 Program Name: Dont Go Broke Investment Simulator
 Course: ITM320
@@ -55,7 +56,7 @@ def main_menu():
             loan_interest_calculator.loan_interest_calculator()
             delay_menu()
         elif choice == "6":
-            inflation_loss_calculator()
+            Inflation_erode_Calculator.inflation_loss_calculator() 
             delay_menu()
         elif choice == "7":
             print("Exiting application. Goodbye!")
