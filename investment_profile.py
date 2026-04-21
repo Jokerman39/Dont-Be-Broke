@@ -8,7 +8,7 @@ based on their inputs.
 """
 
 class InvestmentProfile:
-
+    # Initializes the class with all of the attributes needed for a new object.
     def __init__(self, name, age, initial_investment, current_investment,
                  marital_status, risk_tolerance):
         self.name = name
@@ -17,7 +17,8 @@ class InvestmentProfile:
         self.current_investment = current_investment
         self.marital_status = marital_status
         self.risk_tolerance = risk_tolerance
-
+    # Calculates the net change between the initial and current investment and tells the
+    # user what type of change has occured with their investments.
     def calculate_growth(self):
         growth = self.current_investment - self.initial_investment
 
@@ -35,9 +36,12 @@ class InvestmentProfile:
 # INPUT VALIDATION HELPERS
 # -----------------------------
 
+# Analyzes input for name variable to make sure of valid name. Cannot include numbers or
+# any characters not specified.
 def get_valid_name(prompt):
     while True:
         value = input(prompt).strip()
+        # Rejects blank input given by user.
         if not value:
             print("Name cannot be blank. Please enter a valid client name.")
             continue
@@ -48,7 +52,7 @@ def get_valid_name(prompt):
 
         print("Invalid name. Please enter only letters, spaces, hyphens, or apostrophes.")
 
-
+# Makes sure that the input for age variable is within the realistic bounds (0-100 years old).
 def get_valid_int(prompt):
     while True:
         try:
@@ -59,10 +63,11 @@ def get_valid_int(prompt):
                 print("Please input a realistic age (100 or below).")
             else:
                 return value
+        # Prevents inputs that are anything but a whole number.
         except ValueError:
             print("Invalid input. Please enter a whole number.")
 
-
+# Validates that the input is a non-negative number, that is no larger than 1 billion.
 def get_valid_float(prompt):
     while True:
         try:
@@ -76,7 +81,7 @@ def get_valid_float(prompt):
         except ValueError:
             print("Invalid input. Please enter a numeric value.")
 
-
+# Makes sure that the input form user is one of the choices provided in the prompt.
 def get_valid_choice(prompt, valid_options):
     while True:
         value = input(prompt).strip().lower()
@@ -90,6 +95,8 @@ def get_valid_choice(prompt, valid_options):
 # PROFILE CREATION FUNCTION
 # -----------------------------
 
+# Calls each input validation helper to gather the user's name, age, inital investment,
+# current investment, marital status, and risk tolerance.
 def create_profile():
     
     name = get_valid_name("Enter client name: ")
@@ -119,6 +126,8 @@ def create_profile():
 # SINGLE RUN FUNCTION
 # -----------------------------
 
+# This is the entry point for creating a new investment profile for user. Used as the
+# connection between the profile creation and the main menu.
 def run_investment_profile():
     """
     This is the ONE function you will import and call in main.py.
