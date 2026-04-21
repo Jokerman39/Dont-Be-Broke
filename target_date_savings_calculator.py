@@ -28,6 +28,8 @@ class SavingsCalculator:
     # Construction & setup
     # ──────────────────────────────────────────────
 
+    # Initializes the class with all of the attributes needed for a new object.
+    # Also provides required parameters for each of the variables to have.
     def __init__(
         self,
         goal: float,
@@ -48,6 +50,7 @@ class SavingsCalculator:
     # Core calculations (private)
     # ──────────────────────────────────────────────
 
+    # Calculates the number of months between today and the target date provided by the user.
     @staticmethod
     def _months_until(target_date: date) -> float:
         """Return the number of months between today and target_date."""
@@ -56,6 +59,8 @@ class SavingsCalculator:
             raise ValueError("Target date must be in the future.")
         return delta_days / 30.4375          # average days per month
 
+    # Calculates the necessary fixed monthly contributions needed for the user to reach
+    # their provided goal.
     def _calc_monthly_contribution(self) -> float:
         """
         Return the fixed monthly contribution needed to reach the goal.
@@ -86,6 +91,7 @@ class SavingsCalculator:
 
         return remaining / ((growth_factor - 1) / r)
 
+    # Updates the annual rate and recalculates monthly contribution with new value.
     def update_rate(self, new_annual_rate: float) -> None:
         """Recalculate with a new annual return rate."""
         self.annual_rate = new_annual_rate
@@ -95,10 +101,13 @@ class SavingsCalculator:
     # Display helpers (private)
     # ──────────────────────────────────────────────
 
+    # Formats the input with a dollar format.
     @staticmethod
     def _fmt(amount: float) -> str:
         return f"${amount:,.2f}"
 
+    # Displays the user's goal, target date, time remaining, current savings, expected annual rate,
+    # and the required monthly, weekly, and daily contributions.
     def print_summary(self) -> None:
         """Print a formatted summary of the savings plan."""
         years  = self.months / 12
@@ -126,11 +135,12 @@ class SavingsCalculator:
         print(f"  Final Balance         : {self._fmt(self.goal)}")
         print("=" * 52 + "\n")
 
+    # Displays a year-by-year balance growth table 
     def print_yearly_breakdown(self) -> None:
         """Print a year-by-year balance growth table."""
         r            = self.annual_rate / 12 / 100
         balance      = self.current_savings
-        total_months = int(math.ceil(self.months))
+        total_months = int(math.ceil(self.months)) # round up so the final month is included.
 
         print("  Year-by-Year Breakdown")
         print(f"  {'Year':>4}  {'Balance':>14}  {'Deposited':>12}  {'Interest':>12}")
@@ -138,7 +148,10 @@ class SavingsCalculator:
 
         year_num = 0
         for m in range(1, total_months + 1):
+            # Apply one month of compund interest, then add this month's contribution.
             balance = balance * (1 + r) + self.monthly_pmt
+            # Prints the row at the end of each 12-month period, and will always
+            # print the last month so the table ends on the target date.
             if m % 12 == 0 or m == total_months:
                 year_num += 1
                 deposited = self.current_savings + self.monthly_pmt * m
@@ -154,6 +167,8 @@ class SavingsCalculator:
 # Input helpers (module-level utilities)
 # ──────────────────────────────────────────────
 
+# Validates user's input and allows values entered with "$" and commas to pass through by
+# filtering. Also checks to make sure the input is a non-negative number.
 def get_float(prompt: str, min_val: float = 0.0, max_val: float | None = None) -> float:
     while True:
         try:
@@ -168,19 +183,19 @@ def get_float(prompt: str, min_val: float = 0.0, max_val: float | None = None) -
         except ValueError:
             print("  ⚠  Invalid input — please enter a number.")
 
-
+# Specific check for the goal variable with a minimum value of 1 and a maximum of 1 billion.
 def get_goal(prompt: str) -> float:
     return get_float(prompt, min_val=1.0, max_val=1000000000)  # Max $1 billion
 
-
+# Specific check for the current savings variable with a minimum value of 0 and a maximum of 1 billion.
 def get_current_savings(prompt: str) -> float:
     return get_float(prompt, min_val=0.0, max_val=1000000000)  # Max $1 billion
 
-
+# Specific check for the annual rate variable with a minimum value of 0 percent and a maximum of 50 percent.
 def get_annual_rate(prompt: str) -> float:
     return get_float(prompt, min_val=0.0, max_val=50.0)  # Max 50% return
 
-
+# Verifies that user input is a valid format and that the given date is not in the past.
 def get_date(prompt: str) -> date:
     while True:
         raw = input(prompt).strip()
@@ -204,6 +219,8 @@ def get_date(prompt: str) -> date:
 # Entry point
 # ──────────────────────────────────────────────
 
+# The main function that acts as the entry point for the main menu. Provides a summary based on
+# the four user input variables, with options to make a year-by-year breakdown and/or new annual rate.
 def target_date_calculator():
     print("\n╔══════════════════════════════════════════════════╗")
     print("║     TARGET DATE SAVINGS RATE CALCULATOR          ║")
@@ -220,6 +237,7 @@ def target_date_calculator():
     calc = SavingsCalculator(goal, target_date, current_savings, annual_rate)
     calc.print_summary()
 
+    # Asks user if they want a yearly breakdown, and ensures that they input a valid response.
     while True:
         show_table = input("  Show year-by-year breakdown? (y/n): ").strip().lower()
         if show_table == "y":
