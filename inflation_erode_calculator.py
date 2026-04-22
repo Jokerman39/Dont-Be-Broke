@@ -1,9 +1,9 @@
 """
-Program Name: Inflation Errode Calculator
+Program Name: Inflation Erode Calculator
 Course: ITM320
 Use Case: Inflation Loss Calculator
 Author: Mark Palsulich
-Description: Calculates the lost the loss in principal due to inlfation over a set time frame.
+Description: Calculates the loss in principal due to inflation over a set time frame.
 """
 # Name: Mark
 # Name of Function: Display Main Menu
